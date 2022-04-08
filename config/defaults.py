@@ -152,11 +152,11 @@ _C.TEST.FEAT_NORM = True
 # Only run test
 _C.TEST.ONLY_TEST = False
 # If to visualize rank results
-_C.TEST.VISUALIZE = "no"
+_C.TEST.VISUALIZE = "yes"
 # What top-k results to rank
 _C.TEST.VISUALIZE_TOPK = 10
 # Max number of query images plotted
-_C.TEST.VISUALIZE_MAX_NUMBER = 1000000
+_C.TEST.VISUALIZE_MAX_NUMBER = 1000
 
 # ---------------------------------------------------------------------------- #
 # MISC
