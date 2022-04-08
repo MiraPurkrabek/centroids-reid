@@ -33,7 +33,7 @@ def id_to_RGB(n, normalized=False):
 def display_tsne_scatterplot(
     embeddings,
     ids=None,
-    method="dummy",
+    method="TSNE",
     show_points=1000,
     num_dims=2,
     perplexity = 5,
@@ -61,7 +61,8 @@ def display_tsne_scatterplot(
             random_state = 0,
             perplexity = perplexity,
             learning_rate = learning_rate,
-            n_iter = iteration
+            n_iter = iteration,
+            init = 'pca',
         ).fit_transform(embeddings[row_idxs, :])
     else:
         compact_embeddings = embeddings[row_idxs, :2]
@@ -71,27 +72,27 @@ def display_tsne_scatterplot(
     data = []
 
     if num_dims == 2:
-        for pi, pt in enumerate(compact_embeddings):
-            if ids is None:
-                color = "blue"
-            else:
-                color = id_to_RGB(int(ids[pi]))
+        # for pi, pt in enumerate(compact_embeddings):
+        # if ids is None:
+        #     color = "blue"
+        # else:
+        #     color = id_to_RGB(int(ids[pi]))
 
-            trace = go.Scatter(
-                    x = [pt[0]], 
-                    y = [pt[1]],  
-                    text = "{:d}".format(int(ids[pi])),
-                    name = "ID {:d}".format(int(ids[pi])),
-                    textposition = "top center",
-                    textfont_size = 20,
-                    mode = 'markers+text',
-                    marker = {
-                        'size': 10,
-                        'opacity': 0.8,
-                        'color': 2
-                    }
-            )
-            data.append(trace)
+        trace = go.Scatter(
+                x = compact_embeddings[:, 0], 
+                y = compact_embeddings[:, 1], 
+                text = list(map(lambda x: str(int(x)), ids)),
+                # name = ids,
+                textposition = "top center",
+                textfont_size = 20,
+                mode = 'markers+text',
+                marker = {
+                    'size': 10,
+                    'opacity': 0.8,
+                    'color': ids
+                }
+        )
+        data.append(trace)
 
     layout = go.Layout(
         margin = {'l': 0, 'r': 0, 'b': 0, 't': 0},
