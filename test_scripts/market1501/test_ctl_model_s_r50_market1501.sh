@@ -3,7 +3,7 @@ python3 train_ctl_model.py \
 GPU_IDS [0] \
 DATASETS.NAMES 'custom_market_dataset' \
 DATASETS.ROOT_DIR './data/' \
-SOLVER.IMS_PER_BATCH 16 \
+SOLVER.IMS_PER_BATCH 32 \
 TEST.IMS_PER_BATCH 128 \
 SOLVER.BASE_LR 0.00035 \
 OUTPUT_DIR './logs/custom_market_dataset_unique/256_resnet50/08_04_2022_retest' \
