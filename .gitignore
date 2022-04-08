@@ -3,6 +3,7 @@
 ./logs*
 ./debugs*
 ./mlruns*
+mlruns/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
