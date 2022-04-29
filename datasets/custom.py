@@ -36,7 +36,7 @@ class CustomDataset(ReidBaseDataModule):
 
     Version that will not supply resampled instances
     """
-    dataset_dir = 'custom_market_dataset_unique'
+    dataset_dir = 'custom_market_dataset'
 
     def __init__(self, cfg, **kwargs):
         super().__init__(cfg, **kwargs)
@@ -83,8 +83,9 @@ class CustomDataset(ReidBaseDataModule):
 
         for idx, img_path in enumerate(img_paths):
             pid, camid = map(int, pattern.search(img_path).groups())
+            camid += 1
             if pid == -1: continue  # junk images are just ignored
-            assert 0 <= pid <= 1501  # pid == 0 means background
+            # assert 0 <= pid <= 1501  # pid == 0 means background
             assert 1 <= camid <= 6
             camid -= 1  # index starts from 0
             if relabel: pid = pid2label[pid]
