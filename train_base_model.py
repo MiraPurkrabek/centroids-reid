@@ -121,6 +121,7 @@ class CTLModel(ModelBase):
 
         self.trainer.logger.log_metrics(log_data, step=self.trainer.current_epoch)
         self.trainer.accelerator_backend.barrier()
+        print("Loss: {:f}".format(float(loss)))
 
 
 if __name__ == "__main__":

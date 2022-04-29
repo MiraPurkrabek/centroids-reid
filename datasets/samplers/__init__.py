@@ -4,9 +4,11 @@
 """
 
 from .distributed_pids_sampler import *
+from .frame_based_sampler import FrameBasedSampler
 
 __factory = {
-    'random_identity': RandomIdentitySampler
+    'random_identity': RandomIdentitySampler,
+    'frame_based': FrameBasedSampler
 }
 
 def get_names():

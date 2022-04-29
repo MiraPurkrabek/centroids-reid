@@ -182,7 +182,7 @@ class CTLModel(ModelBase):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CLT Model Training")
     parser.add_argument(
-        "--config_file", default="", help="path to config file", type=str
+        "--config_file", default="configs/256_resnet50.yml", help="path to config file", type=str
     )
     parser.add_argument(
         "opts",
@@ -191,7 +191,31 @@ if __name__ == "__main__":
         nargs=argparse.REMAINDER,
     )
 
+    # DATASETS.NAMES "custom_market_dataset" \
+    # DATASETS.ROOT_DIR $DATASET_PATH \
+    # SOLVER.IMS_PER_BATCH 32 \
+    # TEST.IMS_PER_BATCH 128 \
+    # SOLVER.BASE_LR 0.00035 \
+    # OUTPUT_DIR $OUTPUT_DIR \
+    # DATALOADER.USE_RESAMPLING False \
+    # USE_MIXED_PRECISION False
+
     args = parser.parse_args()
+    
+    # In case of empty call, use the default settings
+    # Useful for running in the debug
+    if args.opts == []:
+        args.opts = [
+            'GPU_IDS', '[0]',
+            'DATASETS.NAMES', 'custom_market_dataset',
+            'DATASETS.ROOT_DIR', './data/U19_SKV_MIL_08_01_2022_1st_period_synced_1min/U19_SKV_MIL_08_01_2022_1st_period_synced_1min_market1501_CLUSTER_0',
+            'SOLVER.IMS_PER_BATCH', '32',
+            'TEST.IMS_PER_BATCH', '128',
+            'SOLVER.BASE_LR', '0.00035',
+            'OUTPUT_DIR', './logs/U19_SKV_MIL_08_01_2022_1st_period_synced_1min/cutom_triplet_loss/29_04_22',
+            'DATALOADER.USE_RESAMPLING', 'False',
+            'USE_MIXED_PRECISION', 'False'
+        ]
 
     if args.config_file != "":
         cfg.merge_from_file(args.config_file)

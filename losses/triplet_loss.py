@@ -32,12 +32,15 @@ def euclidean_dist(x, y):
     Returns:
       dist: pytorch Variable, with shape [m, n]
     """
+    # print("Computing fukcin euclidean_distance")
     m, n = x.size(0), y.size(0)
     xx = torch.pow(x, 2).sum(1, keepdim=True).expand(m, n)
     yy = torch.pow(y, 2).sum(1, keepdim=True).expand(n, m).t()
     dist = xx + yy
     dist.addmm_(1, -2, x.float(), y.float().t())
     dist = dist.clamp(min=1e-12).sqrt()  # for numerical stability
+    # print(x.shape, y.shape)
+    # print(dist.shape)
     return dist
 
 

@@ -165,6 +165,7 @@ class ModelBase(pl.LightningModule):
 
         self.trainer.logger.log_metrics(log_data, step=self.trainer.current_epoch)
         self.trainer.accelerator_backend.barrier()
+        print("Loss: {:f}".format(float(loss)))
 
     @rank_zero_only
     def validation_step(self, batch, batch_idx):
