@@ -191,15 +191,6 @@ if __name__ == "__main__":
         nargs=argparse.REMAINDER,
     )
 
-    # DATASETS.NAMES "custom_market_dataset" \
-    # DATASETS.ROOT_DIR $DATASET_PATH \
-    # SOLVER.IMS_PER_BATCH 32 \
-    # TEST.IMS_PER_BATCH 128 \
-    # SOLVER.BASE_LR 0.00035 \
-    # OUTPUT_DIR $OUTPUT_DIR \
-    # DATALOADER.USE_RESAMPLING False \
-    # USE_MIXED_PRECISION False
-
     args = parser.parse_args()
     
     # In case of empty call, use the default settings

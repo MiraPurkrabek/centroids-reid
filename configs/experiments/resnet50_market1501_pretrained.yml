@@ -1,0 +1,78 @@
+################################################################################
+# Use this config for this particular experiment only for easy backtracking.
+# If you need to change any of the parameters, create a new config with changed
+# experiment name.
+################################################################################
+
+# ---------------------------------------------------------------------------- #
+MODEL:
+  NAME: 'resnet50'
+  BACKBONE_EMB_SIZE: 2048
+  PRETRAINED: True
+  PRETRAIN_PATH: './models/resnet50_pretrained.pth'
+  LAST_STRIDE: 1
+  USE_CENTROIDS: False
+  KEEP_CAMID_CENTROIDS: True
+  RESUME_TRAINING: False
+
+# ---------------------------------------------------------------------------- #
+INPUT:
+  SIZE_TRAIN: [256,128]
+  SIZE_TEST: [256,128]
+
+# ---------------------------------------------------------------------------- #
+DATASETS:
+  NAMES: "custom_market_dataset"
+
+# ---------------------------------------------------------------------------- #
+DATALOADER:
+  NUM_INSTANCE: 4
+  USE_RESAMPLING: False
+
+# ---------------------------------------------------------------------------- #
+SOLVER:
+  IMS_PER_BATCH: 4
+  OPTIMIZER_NAME: "Adam"
+  BASE_LR: 0.00035
+  MAX_EPOCHS: 120
+  EVAL_PERIOD: 10
+  SAVE_INTERVAL: 10
+  CHECKPOINT_PERIOD: 10
+  N_KEEP_MODELS: 7
+  MOMENTUM: 0.9
+  MARGIN: 0.5
+  DISTANCE_FUNC: "euclidean"
+  CLUSTER_MARGIN: 0.3
+  CENTER_LR: 0.5
+  CENTER_LOSS_WEIGHT: 0.0005
+  WEIGHT_DECAY: 0.0005
+  WEIGHT_DECAY_BIAS: 0.0005
+  LR_SCHEDULER_NAME: "multistep_lr"
+  GAMMA: 0.1
+  LR_STEPS: (40, 70)
+  USE_WARMUP_LR: True
+  WARMUP_EPOCHS: 10
+  MONITOR_METRIC_NAME: "mAP"
+  MONITOR_METRIC_MODE: "max"
+  DIST_BACKEND: "ddp"
+  QUERY_XENT_WEIGHT: 1.0
+  QUERY_CONTRASTIVE_WEIGHT: 1.0
+  CENTROID_CONTRASTIVE_WEIGHT: 1.0
+  USE_AUTOMATIC_OPTIM: False
+
+# ---------------------------------------------------------------------------- #
+TEST:
+  IMS_PER_BATCH: 128
+  VISUALIZE: "yes"
+  WEIGHT: ""
+  FEAT_NORM: True
+  ONLY_TEST: False
+  VISUALIZE_TOPK: 20
+  VISUALIZE_MAX_NUMBER: 1000
+
+# ---------------------------------------------------------------------------- #
+USE_MIXED_PRECISION: False
+GPU_IDS: [0]
+REPRODUCIBLE: True
+REPRODUCIBLE_SEED: 0
+REPRODUCIBLE_NUM_RUNS: 1

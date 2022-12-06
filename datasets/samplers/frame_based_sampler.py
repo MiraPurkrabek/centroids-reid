@@ -39,6 +39,7 @@ class FrameBasedSampler(Sampler):
         self.unique_frames = np.unique(self.frame_ids)
 
         self.epoch = 0
+        # self.return_size = self.batch_size * 4
         self.return_size = len(self.pids) // self.batch_size
         self.length = self.return_size
 

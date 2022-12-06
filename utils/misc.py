@@ -73,9 +73,10 @@ def get_backbone(name: str, **kwargs) -> torch.nn.Module:
 def run_single(cfg, method, logger_save_dir):
 
     logger = TensorBoardLogger(cfg.LOG_DIR, name=logger_save_dir)
-    mlflow_logger = MLFlowLogger(experiment_name="default")
+    # mlflow_logger = MLFlowLogger(experiment_name="default")
 
-    loggers = [logger, mlflow_logger]
+    loggers = [logger]
+    # loggers = [logger, mlflow_logger]
 
     checkpoint_callback = ModelCheckpoint(
         dirpath=os.path.join(logger.log_dir, "checkpoints"),
@@ -88,8 +89,8 @@ def run_single(cfg, method, logger_save_dir):
     periodic_checkpointer = ModelCheckpointPeriodic(
         dirname=os.path.join(logger.log_dir, "auto_checkpoints"),
         filename_prefix="checkpoint",
-        n_saved=1,
-        save_interval=1,
+        n_saved=cfg.SOLVER.N_KEEP_MODELS,
+        save_interval=cfg.SOLVER.SAVE_INTERVAL,
     )
 
     dm = init_dataset(

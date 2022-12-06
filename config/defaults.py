@@ -122,7 +122,7 @@ _C.SOLVER.MONITOR_METRIC_NAME = "mAP"
 # Metric value mode used for checkpointing (max, min, auto)
 _C.SOLVER.MONITOR_METRIC_MODE = "max"
 # epoch number of saving checkpoints
-_C.SOLVER.CHECKPOINT_PERIOD = 50
+_C.SOLVER.CHECKPOINT_PERIOD = 10
 # epoch number of validation
 _C.SOLVER.EVAL_PERIOD = 5
 # Number of images per batch PER GPU
@@ -138,6 +138,10 @@ _C.SOLVER.QUERY_CONTRASTIVE_WEIGHT = 1.0
 _C.SOLVER.CENTROID_CONTRASTIVE_WEIGHT = 1.0
 # Whether to use automatic Python Lightning optimization
 _C.SOLVER.USE_AUTOMATIC_OPTIM = False
+# Parameters for saving models
+_C.SOLVER.SAVE_INTERVAL = 1
+_C.SOLVER.N_KEEP_MODELS = 1
+
 
 # ---------------------------------------------------------------------------- #
 # TEST

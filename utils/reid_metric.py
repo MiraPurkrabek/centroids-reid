@@ -9,6 +9,7 @@ Adapted and extended by:
 """
 
 import os
+import shutil
 import warnings
 import time
 import numpy as np
@@ -144,8 +145,40 @@ class R1_mAP:
                 self.hparms,
                 width=self.hparms.INPUT.SIZE_TEST[1],
                 height=self.hparms.INPUT.SIZE_TEST[0],
-                save_dir=os.path.join(self.hparms.OUTPUT_DIR, "visrank"),
+                save_dir=os.path.join(self.hparms.OUTPUT_DIR, "visrank_{:d}".format(self.current_epoch)),
                 topk=self.hparms.TEST.VISUALIZE_TOPK,
             )
+
+        # if self.hparms.TEST.SAVE_MODEL_UPON_VISUALIZATION:
+        #     print("Saving model {:d}...".format(self.current_epoch))
+        #     src_path = None
+        #     max_dir_num = -1
+        #     for dirname in os.listdir(os.path.join(self.hparms.OUTPUT_DIR, "train_ctl_model")):
+        #         if dirname.startswith("version_"):
+        #             dirnum = int(dirname.split("_")[-1])
+        #             if dirnum > max_dir_num:
+        #                 max_dir_num = dirnum
+        #                 src_path = dirname
+        #     if src_path is not None:
+        #         src_path = os.path.join(
+        #             self.hparms.OUTPUT_DIR,
+        #             "train_ctl_model",
+        #             src_path,
+        #             "auto_checkpoints",
+        #             "checkpoint_{}.pth".format(self.current_epoch)
+        #         )
+        #         dst_dir = os.path.join(
+        #             self.hparms.OUTPUT_DIR,
+        #             "visrank_{}".format(self.current_epoch),
+        #             "checkpoint",
+        #         )
+        #         dst_path = os.path.join(
+        #             dst_dir,
+        #             "checkpoint_{}.pth".format(self.current_epoch)
+        #         )
+        #         os.makedirs(dst_dir, exist_ok=True)
+        #         shutil.copyfile(src_path, dst_path)
+        #         print("Model copied from '{}'".format(src_path))
+        #         print("\tto '{}'".format(dst_path))
 
         return cmc, mAP, all_topk
