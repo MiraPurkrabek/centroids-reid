@@ -35,7 +35,7 @@ class CTLModel(ModelBase):
         ]
         self.losses_dict = {n: [] for n in self.losses_names}
 
-    def training_step(self, batch, batch_idx, optimizer_idx=None):
+    def training_step(self, batch, batch_idx):#, optimizer_idx=None):
         opt, opt_center = self.optimizers(use_pl_optimizer=True)
 
         if self.hparams.SOLVER.USE_WARMUP_LR:

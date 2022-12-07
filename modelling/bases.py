@@ -60,8 +60,12 @@ class ModelBase(pl.LightningModule):
             if cfg.TEST.ONLY_TEST:
                 # To make sure that loaded hparams are overwritten by cfg we may have chnaged
                 hparams = {**kwargs, **cfg}
-        self.hparams = AttributeDict(hparams)
-        self.save_hyperparameters(self.hparams)
+
+        # The new way of saving params in the PyTorch-Lightning
+        # self.hparams = AttributeDict(hparams)
+        self.save_hyperparameters(hparams)
+
+        self.automatic_optimization=cfg.SOLVER.USE_AUTOMATIC_OPTIM
 
         if test_dataloader is not None:
             self.test_dataloader = test_dataloader
@@ -104,7 +108,7 @@ class ModelBase(pl.LightningModule):
         epoch,
         batch_idx,
         optimizer,
-        optimizer_idx,
+        # optimizer_idx,
         optimizer_closure=None,
         on_tpu=False,
         using_native_amp=False,
@@ -123,7 +127,7 @@ class ModelBase(pl.LightningModule):
         super().optimizer_step(
             epoch=epoch,
             optimizer=optimizer,
-            optimizer_idx=optimizer_idx,
+            # optimizer_idx=optimizer_idx,
             batch_idx=batch_idx,
             optimizer_closure=optimizer_closure,
             on_tpu=on_tpu,
@@ -132,7 +136,7 @@ class ModelBase(pl.LightningModule):
             **kwargs,
         )
 
-    def training_step(self, batch, batch_idx, opt_idx=None):
+    def training_step(self, batch, batch_idx):#, opt_idx=None):
         raise NotImplementedError(
             "A used model should have its own training_step method implemented"
         )
@@ -164,7 +168,7 @@ class ModelBase(pl.LightningModule):
                 self.losses_dict[name] = []  ## Zeroing values after a completed epoch
 
         self.trainer.logger.log_metrics(log_data, step=self.trainer.current_epoch)
-        self.trainer.accelerator_backend.barrier()
+        self.trainer.training_type_plugin.barrier()
         print("Loss: {:f}".format(float(loss)))
 
     @rank_zero_only

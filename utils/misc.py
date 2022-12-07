@@ -114,9 +114,11 @@ def run_single(cfg, method, logger_save_dir):
         if cfg.MODEL.RESUME_TRAINING
         else None,
         callbacks=[periodic_checkpointer],
-        enable_pl_optimizer=True,
-        reload_dataloaders_every_epoch=True,
-        automatic_optimization=cfg.SOLVER.USE_AUTOMATIC_OPTIM,
+        # Comment out as the newer version of PyTorch-Lightning does not
+        # have this options
+        # enable_pl_optimizer=True,
+        # reload_dataloaders_every_epoch=True,
+        # automatic_optimization=cfg.SOLVER.USE_AUTOMATIC_OPTIM,
     )
 
     train_loader = dm.train_dataloader(
@@ -155,7 +157,7 @@ def run_single(cfg, method, logger_save_dir):
                 use_multiple_loggers=True if len(loggers) > 1 else False,
             )
         trainer.fit(
-            method, train_dataloader=train_loader, val_dataloaders=[val_dataloader]
+            method, train_loader, val_dataloader
         )
         method.hparams.MODEL.USE_CENTROIDS = not method.hparams.MODEL.USE_CENTROIDS
         trainer.test(model=method, test_dataloaders=val_dataloader)
