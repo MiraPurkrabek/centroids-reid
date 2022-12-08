@@ -15,6 +15,8 @@ from .street2shop import Street2Shop
 from .custom import CustomDataset
 from .frame_triplets_dataset import FrameTripletsDataset
 from .GPHMER_texture_bf import GPHMERTextureBF
+from .GPHMER_texture_smpl import GPHMERTextureSMPL
+from .NUMBERS_dataset import NUMBERSDataset
 
 __factory = {
     "market1501": Market1501,
@@ -24,6 +26,8 @@ __factory = {
     "custom_market_dataset": CustomDataset,
     "frame_triplets_dataset": FrameTripletsDataset,
     "GPHMER_texture_BF": GPHMERTextureBF,
+    "GPHMER_texture_SMPL": GPHMERTextureSMPL,
+    "NUMBERS_dataset": NUMBERSDataset,
 }
 
 

@@ -1,5 +1,7 @@
 SEQ_NAME="U19_SKV_MIL_08_01_2022_2nd_period_synced_3shifts"
-EXPERIMENT_NAME="GPHMER_texture_BF"
+EXPERIMENT_NAME="GPHMER_texture_SMPL"
+EXPERIMENT_NAME="merged_datasets"
+EXPERIMENT_NAME="NUMBERS"
 DATE=$(date +"%m_%d_%y")
 TIME=$(date +"%H_%M")
 
