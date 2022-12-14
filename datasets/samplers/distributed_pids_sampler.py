@@ -22,7 +22,7 @@ class RandomIdentitySampler(Sampler):
     - batch_size (int): number of examples in a batch.
     """
 
-    def __init__(self, data_source, batch_size, num_instances, world_size=None, rank=None):
+    def __init__(self, data_source, batch_size, num_instances, world_size=1, rank=0):
         self.data_source = data_source
         self.batch_size = batch_size  # This is the number of unique pids in reality
         self.num_instances = num_instances
@@ -77,9 +77,12 @@ class RandomIdentitySampler(Sampler):
         assert len(final_idxs) % self.batch_size == 0, f"Number of elements in the sampler indices after the split {len(final_idxs)} must be divisible by the batch_size {self.batch_size}, but it is not!"
 
         self.length = len(final_idxs)
+        print("Sampler len:", self.length, self.batch_size, self.length%self.batch_size)
+        print("Sampler num instances:", self.num_instances)
         return iter(final_idxs)
 
     def __len__(self):
+        print("Someone asked for len and I returned", self.length)
         return self.length
 
     def set_epoch(self, epoch):

@@ -86,7 +86,16 @@ def eval_func(
     all_cmc = np.asarray(all_cmc).astype(np.float32)
     all_cmc = all_cmc.sum(0) / num_valid_q
     mAP = np.mean(all_AP)
-    all_topk = np.vstack(topk_results)
-    all_topk = np.mean(all_topk, 0)
+    if len(topk_results) > 0:
+        all_topk = np.vstack(topk_results)
+        all_topk = np.mean(all_topk, 0)
+    else:
+        all_topk = np.array([0 * num_q])
+
+    # print("="*20)
+    # print(all_topk)
+    # print(all_topk.shape, all_topk.dtype)
+    # print("="*20)
+    # return None
 
     return all_cmc, mAP, all_topk, np.array(single_performance)

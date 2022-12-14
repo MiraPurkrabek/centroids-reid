@@ -17,6 +17,9 @@ from .frame_triplets_dataset import FrameTripletsDataset
 from .GPHMER_texture_bf import GPHMERTextureBF
 from .GPHMER_texture_smpl import GPHMERTextureSMPL
 from .NUMBERS_dataset import NUMBERSDataset
+from .floorball_manual_market import FloorballManualMarket
+from .patches_market import PatchesMarket
+from .patches_market_separate import PatchesMarketSeparate
 
 __factory = {
     "market1501": Market1501,
@@ -28,6 +31,9 @@ __factory = {
     "GPHMER_texture_BF": GPHMERTextureBF,
     "GPHMER_texture_SMPL": GPHMERTextureSMPL,
     "NUMBERS_dataset": NUMBERSDataset,
+    "floorball_manual_market": FloorballManualMarket,
+    "patches_market": PatchesMarket,
+    "patches_market_separate": PatchesMarketSeparate,
 }
 
 

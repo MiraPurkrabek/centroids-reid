@@ -142,6 +142,18 @@ class ModelBase(pl.LightningModule):
         )
 
     def training_epoch_end(self, outputs):
+        print()
+        print("+" * 20)
+        print("Evaluating on epoch end - no @")
+        # print(self.trainer.global_rank, self.trainer.local_rank)
+        # print(self.hparams)
+        # print(" -.- " * 20)
+        # print(dir(self.trainer))
+        print("+" * 20)
+        print()
+        # if self.trainer.current_epoch % self.hparams.SOLVER.EVAL_PERIOD == 0:
+        #     self.validation_epoch_end(outputs)
+
         if hasattr(self.trainer.train_dataloader.sampler, "set_epoch"):
             self.trainer.train_dataloader.sampler.set_epoch(self.current_epoch + 1)
 
@@ -150,7 +162,7 @@ class ModelBase(pl.LightningModule):
         epoch_dist_ap = np.mean([x["other"].pop("step_dist_ap") for x in outputs])
         epoch_dist_an = np.mean([x["other"].pop("step_dist_an") for x in outputs])
         l2_mean_norm = np.mean([x["other"].pop("l2_mean_centroid") for x in outputs])
-
+        
         del outputs
 
         log_data = {
@@ -170,6 +182,8 @@ class ModelBase(pl.LightningModule):
         self.trainer.logger.log_metrics(log_data, step=self.trainer.current_epoch)
         self.trainer.training_type_plugin.barrier()
         print("Loss: {:f}".format(float(loss)))
+
+
 
     @rank_zero_only
     def validation_step(self, batch, batch_idx):
@@ -303,6 +317,14 @@ class ModelBase(pl.LightningModule):
 
     def validation_epoch_end(self, outputs):
         if self.trainer.global_rank == 0 and self.trainer.local_rank == 0:
+            print()
+            print("+" * 20)
+            print("Evaluating on epoch end")
+            # print(self.trainer.global_rank, self.trainer.local_rank)
+            # print(self.hparams)
+            # print(outputs)
+            print("+" * 20)
+            print()
             embeddings = torch.cat([x.pop("emb") for x in outputs]).detach().cpu()
             labels = (
                 torch.cat([x.pop("labels") for x in outputs]).detach().cpu().numpy()
@@ -320,11 +342,27 @@ class ModelBase(pl.LightningModule):
             if self.trainer.global_rank == 0 and self.trainer.local_rank == 0:
                 self.get_val_metrics(embeddings, labels, camids)
             del embeddings, labels, camids
+        else:
+            print()
+            print("+" * 20)
+            print("NOT Evaluating on epoch end")
+            print(self.trainer.global_rank, self.trainer.local_rank)
+            # print(self.hparams)
+            print("+" * 20)
+            print()
         self.trainer.training_type_plugin.barrier()
+
 
     @rank_zero_only
     def eval_on_train(self):
         if self.trainer.global_rank == 0 and self.trainer.local_rank == 0:
+            print()
+            print("+" * 20)
+            print("Evaluating on train")
+            # print(self.trainer.global_rank, self.trainer.local_rank)
+            # print(self.hparams)
+            print("+" * 20)
+            print()
             outputs = []
             device = list(self.backbone.parameters())[0].device
             for batch_idx, batch in enumerate(self.test_dataloader):
@@ -360,6 +398,13 @@ class ModelBase(pl.LightningModule):
             for key, val in log_data.items():
                 tensorboard = self.logger.experiment
                 tensorboard.add_scalar(key, val, self.current_epoch)
+        else:
+            print()
+            print("+" * 20)
+            print("NOT evaluating on train")
+            print(self.trainer.global_rank, self.trainer.local_rank)
+            print("+" * 20)
+            print()
 
     @staticmethod
     def create_masks_train(class_labels):

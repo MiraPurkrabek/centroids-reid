@@ -17,12 +17,12 @@ MODEL:
 
 # ---------------------------------------------------------------------------- #
 INPUT:
-  SIZE_TRAIN: [320, 320]
-  SIZE_TEST: [320, 320]
+  SIZE_TRAIN: [256,128]
+  SIZE_TEST: [256,128]
 
 # ---------------------------------------------------------------------------- #
 DATASETS:
-  NAMES: "GPHMER_texture_SMPL"
+  NAMES: "patches_market"
 
 # ---------------------------------------------------------------------------- #
 DATALOADER:
@@ -35,7 +35,7 @@ SOLVER:
   OPTIMIZER_NAME: "Adam"
   BASE_LR: 0.00035
   MAX_EPOCHS: 120
-  EVAL_PERIOD: 1
+  EVAL_PERIOD: 10
   SAVE_INTERVAL: 10
   CHECKPOINT_PERIOD: 10
   N_KEEP_MODELS: 7
@@ -51,7 +51,7 @@ SOLVER:
   GAMMA: 0.1
   LR_STEPS: (40, 70)
   USE_WARMUP_LR: True
-  WARMUP_EPOCHS: 0
+  WARMUP_EPOCHS: 10
   MONITOR_METRIC_NAME: "mAP"
   MONITOR_METRIC_MODE: "max"
   DIST_BACKEND: "ddp"

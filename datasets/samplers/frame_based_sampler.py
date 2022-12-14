@@ -68,9 +68,11 @@ class FrameBasedSampler(Sampler):
                 selected_idxs.extend(random_pids_from_frame)
         
         self.length = len(selected_idxs)
+        print("Sampler len:", self.length, self.batch_size, self.length%self.batch_size)
         return iter(selected_idxs)
 
     def __len__(self):
+        print("Someone asked for len and I returned", self.length)
         return self.length
 
     def set_epoch(self, epoch):
