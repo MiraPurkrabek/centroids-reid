@@ -57,6 +57,9 @@ def eval_func(
             remove = (g_pids[order] == q_pid) & (g_camids[order] == q_camid)
         keep = np.invert(remove)
 
+        # Keep all gallery samples as I test only on one camera
+        keep = np.ones(keep.shape, dtype=bool)
+
         # compute cmc curve
         # binary vector, positions with value 1 are correct matches
         orig_cmc = matches[q_idx][keep]

@@ -11,7 +11,8 @@ import pytorch_lightning as pl
 import torch
 import torchvision
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.loggers import MLFlowLogger, TensorBoardLogger
+# from pytorch_lightning.loggers import MLFlowLogger, TensorBoardLogger
+from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.utilities.seed import seed_everything
 from torch import Tensor
 from torch.nn.utils.rnn import pad_sequence
@@ -31,9 +32,9 @@ def get_distributed_sampler(
         "ddp2": trainer.num_nodes,
         "ddp_cpu": trainer.num_processes * trainer.num_nodes,
     }
-    assert trainer.distributed_backend is not None
+    assert trainer.strategy is not None
     kwargs = dict(
-        num_replicas=world_size[trainer.distributed_backend], rank=trainer.global_rank
+        num_replicas=world_size[trainer.strategy], rank=trainer.global_rank
     )
 
     kwargs["shuffle"] = train and not trainer.overfit_batches
@@ -73,9 +74,10 @@ def get_backbone(name: str, **kwargs) -> torch.nn.Module:
 def run_single(cfg, method, logger_save_dir):
 
     logger = TensorBoardLogger(cfg.LOG_DIR, name=logger_save_dir)
-    mlflow_logger = MLFlowLogger(experiment_name="default")
+    # mlflow_logger = MLFlowLogger(experiment_name="default")
 
-    loggers = [logger, mlflow_logger]
+    # loggers = [logger, mlflow_logger]
+    loggers = [logger]
 
     checkpoint_callback = ModelCheckpoint(
         dirpath=os.path.join(logger.log_dir, "checkpoints"),
@@ -113,9 +115,9 @@ def run_single(cfg, method, logger_save_dir):
         if cfg.MODEL.RESUME_TRAINING
         else None,
         callbacks=[periodic_checkpointer],
-        enable_pl_optimizer=True,
-        reload_dataloaders_every_epoch=True,
-        automatic_optimization=cfg.SOLVER.USE_AUTOMATIC_OPTIM,
+        # enable_pl_optimizer=True,
+        # reload_dataloaders_every_epoch=True,
+        # automatic_optimization=cfg.SOLVER.USE_AUTOMATIC_OPTIM,
     )
 
     train_loader = dm.train_dataloader(
@@ -154,10 +156,10 @@ def run_single(cfg, method, logger_save_dir):
                 use_multiple_loggers=True if len(loggers) > 1 else False,
             )
         trainer.fit(
-            method, train_dataloader=train_loader, val_dataloaders=[val_dataloader]
+            method, train_loader, val_dataloader
         )
         method.hparams.MODEL.USE_CENTROIDS = not method.hparams.MODEL.USE_CENTROIDS
-        trainer.test(model=method, test_dataloaders=val_dataloader)
+        trainer.test(model=method, dataloaders=val_dataloader)
         method.hparams.MODEL.USE_CENTROIDS = not method.hparams.MODEL.USE_CENTROIDS
 
 

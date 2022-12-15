@@ -60,8 +60,10 @@ class ModelBase(pl.LightningModule):
             if cfg.TEST.ONLY_TEST:
                 # To make sure that loaded hparams are overwritten by cfg we may have chnaged
                 hparams = {**kwargs, **cfg}
-        self.hparams = AttributeDict(hparams)
-        self.save_hyperparameters(self.hparams)
+        # self.hparams = AttributeDict(hparams)
+        self.save_hyperparameters(hparams)
+        
+        self.automatic_optimization=cfg.SOLVER.USE_AUTOMATIC_OPTIM
 
         if test_dataloader is not None:
             self.test_dataloader = test_dataloader
@@ -132,7 +134,7 @@ class ModelBase(pl.LightningModule):
             **kwargs,
         )
 
-    def training_step(self, batch, batch_idx, opt_idx=None):
+    def training_step(self, batch, batch_idx):
         raise NotImplementedError(
             "A used model should have its own training_step method implemented"
         )
@@ -164,7 +166,7 @@ class ModelBase(pl.LightningModule):
                 self.losses_dict[name] = []  ## Zeroing values after a completed epoch
 
         self.trainer.logger.log_metrics(log_data, step=self.trainer.current_epoch)
-        self.trainer.accelerator_backend.barrier()
+        self.trainer.training_type_plugin.barrier()
 
     @rank_zero_only
     def validation_step(self, batch, batch_idx):
@@ -315,7 +317,7 @@ class ModelBase(pl.LightningModule):
             if self.trainer.global_rank == 0 and self.trainer.local_rank == 0:
                 self.get_val_metrics(embeddings, labels, camids)
             del embeddings, labels, camids
-        self.trainer.accelerator_backend.barrier()
+        self.trainer.training_type_plugin.barrier()
 
     @rank_zero_only
     def eval_on_train(self):
